@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCoD-Diffusion Research</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Navigation -->
+        <nav class="sidebar">
+            <div class="nav-content">
+                <h1>BCoD-Diffusion</h1>
+                <ul>
+                    <li><a href="#abstract">Abstract</a></li>
+                    <li><a href="#methodology">Methodology</a></li>
+                    <li><a href="#hardware">Real-World Experiments (Qualitative Results)</a></li>
+                    <li><a href="#results">Key Findings (Quantitative Results)</a></li>
+                    <li><a href="#dataset">Dataset</a></li>
+                </ul>
+                <div class="external-links">
+                    <a href="https://github.com/bcod-diffusion/bcod-diffusion.github.io/blob/main/paper.pdf" class="button"><i class="fas fa-file-pdf"></i> Paper</a>
+                    <a href="https://github.com/bcod-diffusion/bcod" class="button"><i class="fab fa-github"></i> Code</a>
+                    <a href="https://github.com/bcod-diffusion/dataset" class="button"><i class="fas fa-database"></i> Dataset</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <!--Title: Belief-Conditioned One-Step Diffusion: Real-Time Trajectory Planning with Just-Enough Sensing-->
+
+        <main class="content">
+            <div class="title-container">
+                <h1>Belief-Conditioned One-Step Diffusion: Real-Time Trajectory Planning with Just-Enough Sensing</h1>
+                <p>
+                    <span class="author">Anonymous Authors</span>
+                </p>
+            </div>
+
+            <br><br><br>
+
+            <section class="teaser-section">
+                <div class="teaser-video-container">
+                    <video controls>
+                        <source src="videos/teaser.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </section>
+
+            <section id="abstract" class="section">
+                <h3>Abstract</h3>
+                <p>Robots equipped with rich sensor suites can localize reliably in partially-observable environments---but powering every sensor continuously is wasteful and often infeasible. Belief-space planners address this by propagating pose-belief covariance through analytic models and switching sensors heuristically--a brittle, runtime-expensive approach.
+                Data-driven approaches--including diffusion models--learn multi-modal trajectories from demonstrations, but presuppose an accurate, always-on state estimate.
+                We address the largely open problem: for a given task in a mapped environment, which <span class="highlight">minimal sensor subset</span> must be active at each location to maintain state uncertainty <span class="highlight">just low enough</span> to complete the task?
+                Our key insight is that when a diffusion planner is explicitly conditioned on a pose-belief raster and a sensor mask, the spread of its denoising trajectories yields a calibrated, differentiable proxy for the expected localisation error.
+                Building on this insight, we present Belief-Conditioned One-Step Diffusion (B-COD), the first planner that, in a 10 ms forward pass, returns a short-horizon trajectory, per-waypoint aleatoric variances, and a proxy for localisation error--eliminating external covariance rollouts.
+                We show that this single proxy suffices for a soft-actor-critic to choose sensors online, optimising energy while bounding pose-covariance growth.
+                We deploy B-COD in real-time marine trials on an unmanned surface vehicle and show that it reduces sensing energy consumption while matching the goal-reach performance of an always-on baseline.</p>
+            </section>
+          
+
+            <section id="methodology" class="section">
+            <h3>Methodology</h3>
+            <!-- <p>[Your methodology content will go here]</p> -->
+
+            <div class="image-container">
+                <img
+                src="imgs/arch.png"
+                alt="Architecture Diagram"
+                class="scaled-image"
+                loading="lazy">
+            </div>
+            </section>
+
+<!-- do the same for every other <img> you have -->
+
+
+            <section id="hardware" class="section">
+                <h3>Real-World Experiments (Qualitative Results)</h3>
+                <p> Our evaluation targets a real-world, real-time scenario in which an autonomous surface vehicle
+                    (ASV) must navigate a <span class="highlight">previously unseen open-air lake</span> to reach waypoint goals with <span class="highlight">just-enough sensing</span> while keeping the CVaR-95 localisation error below a user budget of 2 m. The lake presents
+                    both natural and human-driven disturbances: winds, waves, fountains, floating buoys and human-induced sensor denied zones. The test
+                    platform is a <span class="highlight">SeaRobotics Surveyor ASV</span> with a differential-thrust propulsion module and a
+                    heterogeneous sensor suite: a multi-beam LiDAR, day and night cameras, RTK-GPS, MEMS IMU,
+                    and an EXO2 sonde. Control inputs are augmented by a discrete mode flag that selects the
+                    estimator configuration implied by the powered sensors. Sensor power draw differs by an order of
+                    magnitude, so efficient scheduling has tangible impact on total mission energy. </p>
+
+                <div class="image-container">
+                    <img src="imgs/env.png" alt="Environment" class="scaled-image" loading="lazy">
+                    <p class="caption">Environment and Autonomous Surface Vehicle testbed</p>
+                </div>
+
+                <br>
+                <br>
+                <br>
+
+                <h3>Experiment videos</h3>
+                <p>Click on the videos below to view the experiments (the videos are sped up for brevity).</p>
+
+                <div class="video-grid">
+                    <div class="video-container" data-video="videos/exp1s.mp4">
+                        <video>
+                            <source src="videos/exp1s.mp4" type="video/mp4">
+                        </video>
+                        <p>Experiment 1 (Day Lap): ASV navigating in an environment with a human induced sensor (GPS) denied zone and a EXO2 rich zone.</p>
+                    </div>
+                    <div class="video-container" data-video="videos/exp2s.mp4">
+                        <video>
+                            <source src="videos/exp2s.mp4" type="video/mp4">
+                        </video>
+                        <p>Experiment 2 (Night Lap): ASV navigating in the environment during night time.</p>
+                    </div>
+                    <div class="video-container" data-video="videos/exp3s.mp4">
+                        <video>
+                            <source src="videos/exp3s.mp4" type="video/mp4">
+                        </video>
+                        <p>Experiment 3 (Night Lap): ASV navigating in the environment during night time.</p>
+                    </div>
+                    <div class="video-container" data-video="videos/exp4s.mp4">
+                        <video>
+                            <source src="videos/exp4s.mp4" type="video/mp4">
+                        </video>
+                        <p>Experiment 4 (Day Lap): ASV navigating in the environment but we force LiDAR to be off in an obstacle rich zone (where LiDAR is usually heavily used).</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Video Popup -->
+            <div class="video-popup">
+                <div class="video-popup-content">
+                    <button class="close-popup">&times;</button>
+                    <video controls>
+                        <source src="" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <section id="results" class="section">
+                <h3>Key Findings (Quantitative Results)</h3>
+                <p>Click on the images below to view the detailed key findings.</p>
+                <div class="key-findings-grid">
+                    <!-- Finding 1 -->
+                    <div class="finding-item" data-finding="1">
+                        <div class="finding-title">Key Finding #1: B-COD+SAC delivers near-perfect task completion at less than half the sensing cost of the Always-ON baseline.</div>
+                        <div class="finding-preview">
+                            <table class="comparison-table">
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Always-ON</th>
+                                    <th>B-COD+SAC</th>
+                                </tr>
+                                <tr>
+                                    <td>Goal-reach (%)</td>
+                                    <td>100.0</td>
+                                    <td>97.9</td>
+                                </tr>
+                                <tr>
+                                    <td>Collision (%)</td>
+                                    <td>0.5</td>
+                                    <td>0.9</td>
+                                </tr>
+                                <tr>
+                                    <td>CVaR violations (%)</td>
+                                    <td>0.1</td>
+                                    <td>0.5</td>
+                                </tr>
+                                <tr>
+                                    <td>Mean #sensors</td>
+                                    <td>5.0</td>
+                                    <td>2.08</td>
+                                </tr>
+                                <tr>
+                                    <td>Energy vs AON (%)</td>
+                                    <td>100.0</td>
+                                    <td>42.3</td>
+                                </tr>
+                                <tr>
+                                    <td>Runtime (ms)</td>
+                                    <td>14.9</td>
+                                    <td>14.3</td>
+                                </tr>
+                                <tr>
+                                    <td>Peak RAM (MB)</td>
+                                    <td>305</td>
+                                    <td>284</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Finding 2 -->
+                    <div class="finding-item" data-finding="2">
+                        <div class="finding-title">Key Finding #2: B-COD's variance is a calibrated, context-aware predictor of localisation error.</div>
+                        <div class="finding-preview">
+                            <img src="imgs/res1.png" alt="B-COD's variance prediction" class="finding-image">
+                        </div>
+                    </div>
+
+                    <!-- Finding 3 -->
+                    <div class="finding-item" data-finding="3">
+                        <div class="finding-title">Key Finding #3: B-COD stays within a 10 ± 1 ms envelope and out-scales analytic belief planners.</div>
+                        <div class="finding-preview">
+                            <table class="comparison-table">
+                                <tr>
+                                    <th>r (m)</th>
+                                    <th>B-COD</th>
+                                    <th>IGG</th>
+                                    <th>DL</th>
+                                </tr>
+                                <tr>
+                                    <td>25</td>
+                                    <td>9.8 ms</td>
+                                    <td>7.5 ms</td>
+                                    <td>565 ms</td>
+                                </tr>
+                                <tr>
+                                    <td>40</td>
+                                    <td>9.7 ms</td>
+                                    <td>10.9 ms</td>
+                                    <td>1446 ms</td>
+                                </tr>
+                                <tr>
+                                    <td>55</td>
+                                    <td>9.6 ms</td>
+                                    <td>14.6 ms</td>
+                                    <td>2737 ms</td>
+                                </tr>
+                                <tr>
+                                    <td>70</td>
+                                    <td>10.7 ms</td>
+                                    <td>18.2 ms</td>
+                                    <td>4430 ms</td>
+                                </tr>
+                                <tr>
+                                    <td>85</td>
+                                    <td>10.4 ms</td>
+                                    <td>18.7 ms</td>
+                                    <td>6536 ms</td>
+                                </tr>
+                                <tr>
+                                    <td>100</td>
+                                    <td>10.9 ms</td>
+                                    <td>23.3 ms</td>
+                                    <td>9040 ms</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Finding 4 -->
+                    <div class="finding-item" data-finding="4">
+                        <div class="finding-title">Key Finding #4: B-COD adapts online, re-allocating modalities to recover from faults.</div>
+                        <div class="finding-preview">
+                            <img src="imgs/res2.png" alt="B-COD's online adaptation" class="finding-image">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Finding Popups -->
+                <div class="finding-popup" id="finding-1">
+                    <div class="finding-popup-content">
+                        <button class="close-finding">&times;</button>
+                        <h3>Key Finding #1: B-COD+SAC delivers near-perfect task completion at less than half the sensing cost of the Always-ON baseline.</h3>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Metric</th>
+                                <th>AON</th>
+                                <th>GOF</th>
+                                <th>IGG</th>
+                                <th>R1</th>
+                                <th>R2</th>
+                                <th>σM</th>
+                                <th>SS</th>
+                                <th>NB</th>
+                                <th>PRL</th>
+                                <th>DL</th>
+                                <th>Ours</th>
+                            </tr>
+                            <tr>
+                                <td>Goal-reach (%)</td>
+                                <td>100.0</td>
+                                <td>47.3</td>
+                                <td>89.9</td>
+                                <td>18.5</td>
+                                <td>29.1</td>
+                                <td>79.6</td>
+                                <td>94.3</td>
+                                <td>67.8</td>
+                                <td>54.8</td>
+                                <td>87.9</td>
+                                <td>97.9</td>
+                            </tr>
+                            <tr>
+                                <td>Collision (%)</td>
+                                <td>0.5</td>
+                                <td>22.3</td>
+                                <td>6.1</td>
+                                <td>34.5</td>
+                                <td>30.1</td>
+                                <td>12.4</td>
+                                <td>4.7</td>
+                                <td>17.4</td>
+                                <td>22.1</td>
+                                <td>4.2</td>
+                                <td>0.9</td>
+                            </tr>
+                            <tr>
+                                <td>CVaR violations (%)</td>
+                                <td>0.1</td>
+                                <td>15.8</td>
+                                <td>4.3</td>
+                                <td>28.6</td>
+                                <td>22.8</td>
+                                <td>9.1</td>
+                                <td>5.2</td>
+                                <td>13.2</td>
+                                <td>18.3</td>
+                                <td>1.9</td>
+                                <td>0.5</td>
+                            </tr>
+                            <tr>
+                                <td>Mean #sensors</td>
+                                <td>5.0</td>
+                                <td>3.19</td>
+                                <td>2.65</td>
+                                <td>1.0</td>
+                                <td>2.0</td>
+                                <td>2.99</td>
+                                <td>2.56</td>
+                                <td>4.05</td>
+                                <td>3.48</td>
+                                <td>5.0</td>
+                                <td>2.08</td>
+                            </tr>
+                            <tr>
+                                <td>Energy vs AON (%)</td>
+                                <td>100.0</td>
+                                <td>61.2</td>
+                                <td>49.8</td>
+                                <td>24.2</td>
+                                <td>38.9</td>
+                                <td>60.1</td>
+                                <td>91.2</td>
+                                <td>68.2</td>
+                                <td>67.5</td>
+                                <td>100</td>
+                                <td>42.3</td>
+                            </tr>
+                            <tr>
+                                <td>Runtime (ms)</td>
+                                <td>14.9</td>
+                                <td>14.7</td>
+                                <td>26.8</td>
+                                <td>13.6</td>
+                                <td>13.7</td>
+                                <td>14.4</td>
+                                <td>84.1</td>
+                                <td>14.1</td>
+                                <td>12.1</td>
+                                <td>565.3</td>
+                                <td>14.3</td>
+                            </tr>
+                            <tr>
+                                <td>Peak RAM (MB)</td>
+                                <td>305</td>
+                                <td>282</td>
+                                <td>403</td>
+                                <td>277</td>
+                                <td>281</td>
+                                <td>287</td>
+                                <td>674</td>
+                                <td>279</td>
+                                <td>299</td>
+                                <td>731</td>
+                                <td>284</td>
+                            </tr>
+                        </table>
+                        <div class="finding-explanation">
+                            <p>Table above summarizes performance over 50 laps. B-COD reaches the goal on 97.9 \% of attempts, yet spends only 42% of the energy. Collisions remain at 0.9%, essentially identical to the Always-ON baseline. 
+Heuristic scheduling cannot match this trade-off: Greedy-OFF conserves energy (61%) but sacrifices success (47%). 
+InfoGain-Greedy raises success to 90% yet violates risk eight times more often than B-COD.  
+Random masks fare worse, proving that local environment context--not just a lower duty cycle--is essential for task completion.
+Pure-RL generates trajectories and schedules sensors from raw rasters; the high-dimensional action space makes exploration sparse, and the policy converges to risk-averse dithering--only 55% goals reached and a 22% collision rate. DESPOT-Lite, by contrast, evaluates a principled belief tree with analytic models and therefore is able to plan accurately, but it expands hundreds of nodes; the resulting 0.5s runtime renders it unusable in real-time on the vehicle.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="finding-popup" id="finding-2">
+                    <div class="finding-popup-content">
+                        <button class="close-finding">&times;</button>
+                        <h3>Key Finding #2: B-COD's variance is a calibrated, context-aware predictor of localisation error.</h3>
+                        <img src="imgs/res1.png" alt="B-COD's variance prediction" class="finding-image">
+                        <div class="finding-explanation">
+                            <p> The reliability curve shows numerical calibration (6 mean error). The reason behind the bound relaxing follows directly from what the diffusion planner is told to care about: 
+                                belief shape, active sensors, and local map geometry. Call-out B (night lap, obstacle corridor): The semantic map reports obstacles--a fountain and a floating buoy. 
+                                Colliding here would be mission-ending, so B-COD turns on LiDAR, night camera and IMU (high energy).  
+                                The planner now expects rich pose updates and knows that centimeters of pose error matter; it shrinks the bound to 0.45 m, almost matching the 0.46 m ground truth drift.
+                                Call-out A (day lap): Tens of meters separate the ASV from any hazard.  With only the IMU running (low energy), B-COD predicts pure dead-reckoning growth yet also "knows" that a meter of drift will not intersect anything.  It therefore widens the bound to 1.85 m, closely tracking the ground truth 2.0 m error.
+                                These results demonstrate that u^CVaR is numerically reliable and spatially discriminative, providing the scheduler with the rich information needed to trade energy for certainty.
+                                </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="finding-popup" id="finding-3">
+                    <div class="finding-popup-content">
+                        <button class="close-finding">&times;</button>
+                        <h3>Key Finding #3: B-COD stays within a 10 ± 1 ms envelope and out-scales analytic belief planners.</h3>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>r (m)</th>
+                                <th>B-COD</th>
+                                <th>IGG</th>
+                                <th>DL</th>
+                            </tr>
+                            <tr>
+                                <td>25</td>
+                                <td>9.8 ms</td>
+                                <td>7.5 ms</td>
+                                <td>565 ms</td>
+                            </tr>
+                            <tr>
+                                <td>40</td>
+                                <td>9.7 ms</td>
+                                <td>10.9 ms</td>
+                                <td>1446 ms</td>
+                            </tr>
+                            <tr>
+                                <td>55</td>
+                                <td>9.6 ms</td>
+                                <td>14.6 ms</td>
+                                <td>2737 ms</td>
+                            </tr>
+                            <tr>
+                                <td>70</td>
+                                <td>10.7 ms</td>
+                                <td>18.2 ms</td>
+                                <td>4430 ms</td>
+                            </tr>
+                            <tr>
+                                <td>85</td>
+                                <td>10.4 ms</td>
+                                <td>18.7 ms</td>
+                                <td>6536 ms</td>
+                            </tr>
+                            <tr>
+                                <td>100</td>
+                                <td>10.9 ms</td>
+                                <td>23.3 ms</td>
+                                <td>9040 ms</td>
+                            </tr>
+                        </table>
+                        <div class="finding-explanation">
+                            <p>The table above sweeps the workspace radius from 25 m to 100 m (full lake sector).  B-COD's latency is flat--10.3 +- 0.6 ms throughout—because the belief crop is always down-sampled and the UNet's receptive field is fixed; compute therefore scales with network width, not with world area.  The InfoGain-Greedy baseline must update an n-cell covariance grid; its cost grows \Theta(R^{2}), reaching 23 ms at 100 m. DESPOT-Lite's branching factor of the belief tree increases with visible free space; runtime balloons to 9000 ms over the same sweep, far beyond what an embedded loop can absorb. The takeaway is practical as well as theoretical: constant-time scaling lets B-COD replan over lake-scale horizons without ever violating the real-time threshold, whereas analytic planners become the computational bottleneck well before the map reaches lake-scale.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="finding-popup" id="finding-4">
+                    <div class="finding-popup-content">
+                        <button class="close-finding">&times;</button>
+                        <h3>Key Finding #4: B-COD adapts online, re-allocating modalities to recover from faults.</h3>
+                        <img src="imgs/res2.png" alt="B-COD's online adaptation" class="finding-image">
+                        <div class="finding-explanation">
+                            <p>During a daytime lap, we manually disabled the LiDAR 30 seconds before the ASV entered the narrow fountain corridor, which demands typically sub-meter localisation. B-COD's risk proxy spiked from 0.6 m to 1.8 m as soon as the loss of range data was reflected. The SA reacted on the next cycle: it re-enabled both cameras and the EXO2 sonde, accepted the high energy penalty, and drove risk down to 0.8 m. Once clear of the obstacle, the proxy dropped naturally; the scheduler shut the extra modalities off and returned to the energy-saving IMU-only sensor choice. No heuristic or fault-flag was required--the planner's calibrated variance alone drove the correct, context-specific recovery sequence.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="dataset" class="section">
+                <h2>Dataset</h2>
+                <div class="dataset-content">
+                    <div class="dataset-info">
+                        <p>Our dataset consists of field logs collected from freshwater lake operations, including twelve day-time and eight night-time sorties. The SeaRobotics Surveyor ASV collected:</p>
+                        <ul>
+                            <li>32-beam spinning LiDAR point clouds (10 Hz, ROS/PCD)</li>
+                            <li>RGB images (20 Hz, PNG)</li>
+                            <li>Near-IR images under 850 nm active illumination (20 Hz, PNG)</li>
+                            <li>RTK-GNSS fixes (5 Hz, NMEA)</li>
+                            <li>Six-axis IMU messages (200 Hz, ROS/Imu)</li>
+                            <li>Water-quality probe samples (2 Hz, CSV)</li>
+                        </ul>
+                        <p>All topics share a chronologically consistent ROS /clock, with each log accompanied by recordings of wind and irradiance for domain-randomisation replay.</p>
+                        <p> An annonymous subset of the dataset (15GB) is available for download (anonymization takes time and hence we chose to release a subset and not the whole dataset): <a href="https://github.com/bcod-diffusion/dataset">https://github.com/bcod-diffusion/dataset</a>. 
+                        We plan to release the whole dataset (280GB) under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).</p>
+                        
+
+                        <h3>Real→Sim Transfer</h3>
+                        <p>Logs are imported into an in-house Unity 2022.3 + ROS 2 simulator that reconstructs the shoreline mesh, static obstacles, bathymetry and approximate above-surface lighting. Dynamic objects are re-instantiated with ground-truth trajectories.</p>
+                        
+                        <h3>Dataset Statistics</h3>
+                        <ul>
+                            <li><strong>Modalities:</strong> 100% contain LiDAR and IMU; day camera appears in 72%, night camera in 28%, GNSS in 64%, sonde in 18%</li>
+                            <li><strong>Belief spread:</strong> Median planar 1σ = 0.38 m; 95th percentile = 2.1 m</li>
+                            <li><strong>Lighting:</strong> Illumination spans 0.2–55 kLux; clips are evenly stratified into five bins for training/validation</li>
+                            <li><strong>Obstacles:</strong> Each snippet is annotated with the minimum range to shoreline and to floating hazards; mean 14.2 m, min 0.8 m</li>
+                        </ul>
+                        
+                        <div class="dataset-link">
+                            <a href="https://github.com/bcod-diffusion/bcod-diffusion.github.io" class="button">
+                                <i class="fas fa-download"></i>
+                                Download Dataset
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="dataset-visualization">
+                        <div class="visualization-grid">
+                            <div class="visualization-item" data-dataset="exo2">
+                                <img src="imgs/exo2_gps.png" alt="EXO2 and GPS Data" class="dataset-image">
+                                <p>EXO2 and GPS Data Visualization</p>
+                            </div>
+                            <div class="visualization-item" data-dataset="lidar">
+                                <img src="imgs/lidar.png" alt="LiDAR Point Cloud" class="dataset-image">
+                                <p>LiDAR Point Cloud Visualization</p>
+                            </div>
+                            <div class="visualization-item" data-dataset="camera">
+                                <img src="imgs/camera.gif" alt="Camera Feed" class="dataset-image">
+                                <p>Camera Feed Visualization</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dataset Visualization Popups -->
+            <div class="dataset-popup" id="dataset-exo2">
+                <div class="dataset-popup-content">
+                    <button class="close-dataset">&times;</button>
+                    <h3>EXO2 and GPS Data</h3>
+                    <img src="imgs/exo2_gps.png" alt="EXO2 and GPS Data" class="dataset-popup-image">
+                    <div class="dataset-explanation">
+                        <p>Example CSV file of EXO2 water quality probe data and GPS measurements collected during lake operations.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dataset-popup" id="dataset-lidar">
+                <div class="dataset-popup-content">
+                    <button class="close-dataset">&times;</button>
+                    <h3>LiDAR Point Cloud</h3>
+                    <img src="imgs/lidar.png" alt="LiDAR Point Cloud" class="dataset-popup-image">
+                    <div class="dataset-explanation">
+                        <p>LiDAR point cloud data collected at 10 Hz, providing environmental mapping.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dataset-popup" id="dataset-camera">
+                <div class="dataset-popup-content">
+                    <button class="close-dataset">&times;</button>
+                    <h3>Camera Feed</h3>
+                    <img src="imgs/camera.gif" alt="Camera Feed" class="dataset-popup-image">
+                    <div class="dataset-explanation">
+                        <p>RGB camera (night camera in this case) feed showing real-time environmental perception.</p>
+                    </div>
+                </div>
+            </div>
+
+            <section class="section">
+                <div class="closing-content">
+                    <p>Built with <span class="heart">❤</span> by the B-COD Team</p>
+                    <div class="contact-info">
+                        <p>For questions and collaborations, please reach out to our team--of course, we are still anonymous--maybe reach out after we get our paper accepted :) ?</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="static/script.js"></script>
+</body>
+</html> 
